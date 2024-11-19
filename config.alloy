@@ -1,0 +1,28 @@
+logging {
+  level  = "debug"
+  format = "logfmt"
+}
+
+livedebugging {
+  enabled = true
+}
+
+otelcol.receiver.otlp "traces_receive_endpoint" {
+  http {
+    endpoint = "0.0.0.0:4318"
+    traces_url_path = "/v1/traces"
+  }
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  output {
+    traces = [otelcol.exporter.otlphttp.traces_write_remote.input]
+  }
+}
+
+otelcol.exporter.otlphttp "traces_write_remote" {
+  client {
+    endpoint = "https://webhook.site/cf72bfce-fc63-4012-96f4-4cb86e09af7b"
+  }
+}
